@@ -139,11 +139,6 @@ nav {
    z-index: 1;
 }
 
-.nav-container {
-   position: sticky;
-   top: 0;
-}
-
 nav h1 a {
    font-family: var(--sans);
 }
