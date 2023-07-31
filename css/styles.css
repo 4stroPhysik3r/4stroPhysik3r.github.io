@@ -302,7 +302,7 @@ footer ul {
    right: 20px;
    background-color: #ffffff00;
    color: white;
-   padding: 10px;
+   padding: 0.5rem;
    border: solid 5px var(--emerald);
    border-radius: 15px 0 15px 0;
    cursor: pointer;
