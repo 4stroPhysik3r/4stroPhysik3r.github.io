@@ -6,7 +6,7 @@ import (
 	"text/template"
 )
 
-const port = ":8080"
+const PORT = ":8080"
 
 func main() {
 
@@ -15,8 +15,8 @@ func main() {
 
 	http.HandleFunc("/", homePageHandler)
 
-	log.Printf("Starting server at: http://localhost:8080")
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Printf("Starting server at: http://localhost" + PORT)
+	log.Fatal(http.ListenAndServe(PORT, nil))
 }
 
 func homePageHandler(w http.ResponseWriter, r *http.Request) {
