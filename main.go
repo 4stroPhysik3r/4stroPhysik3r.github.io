@@ -18,12 +18,14 @@ func main() {
 	log.Printf("Starting server at: http://localhost:8080")
 	log.Fatal(http.ListenAndServe(port, nil))
 }
+
 func homePageHandler(w http.ResponseWriter, r *http.Request) {
 	err := renderTempl(w, r)
 	if err != nil {
 		http.Error(w, err.Error(), 404)
 	}
 }
+
 func renderTempl(w http.ResponseWriter, r *http.Request) error {
 	templ, err := template.ParseFiles("static/" + "index.html")
 	if err != nil {

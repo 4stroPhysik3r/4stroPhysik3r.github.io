@@ -6,7 +6,7 @@ var logOutDiv = document.getElementById("logOutDiv")
 init()
 
 function init() {
-    
+
     let body = document.getElementById("app")
     if (localStorage.loggedIn != "true") {
         login()
@@ -16,7 +16,7 @@ function init() {
 }
 
 function login() {
-   
+
     app.style.display = "none"
     let loginDiv = document.getElementById("loginDiv")
     loginDiv.className = "login"
@@ -25,7 +25,7 @@ function login() {
     let lineBreak = document.createElement("br")
     //can't append same linebreak 2 times somewhy to the form, so creating 2 different ones : D
     let lineBreak2 = document.createElement("br")
-    
+
     let loginName = document.createElement("input")
     loginName.type = "text"
     loginName.name = "username"
@@ -33,7 +33,7 @@ function login() {
     loginName.placeholder = "Username or email"
     loginName.id = "username"
     loginName.required = true
-   
+
     let loginPassword = document.createElement("input")
     loginPassword.type = "password"
     loginPassword.name = "password"
@@ -53,13 +53,13 @@ function login() {
     button.type = "submit"
     button.className = "button"
     button.innerHTML = "Login"
-    
+
     let error = document.createElement("h2")
     error.style.display = "none"
     error.id = "error"
     error.className = "error"
-    
-// append all the shit to the loginForm -> to the loginDiv
+
+    // append all the shit to the loginForm -> to the loginDiv
     loginForm.appendChild(loginName)
     loginForm.appendChild(lineBreak)
     loginForm.appendChild(loginPassword)
@@ -102,7 +102,7 @@ async function authorize() {
 
     // Storing the information about token in the local storage and setting the loggedIn flag true
     localStorage.setItem('JWToken', token)
-    localStorage.setItem('loggedIn', true) 
+    localStorage.setItem('loggedIn', true)
     document.getElementById("loginDiv").style.display = "none"
 
     home()
@@ -160,7 +160,7 @@ async function fetchUserData() {
             })
         });
         let data = await response.json();
-        return data; 
+        return data;
     } catch (error) {
         console.log(error);
         return null; // Return null if error occurs
@@ -175,7 +175,7 @@ function renderUserInfo(userData) {
 
     let header = document.createElement("p");
     header.textContent = "My profile information:";
-    header.style.fontWeight = "bold"; 
+    header.style.fontWeight = "bold";
     header.style.fontSize = "1.3em";
 
     let userId = document.createElement("p");
@@ -187,28 +187,28 @@ function renderUserInfo(userData) {
     let userCreatedAt = document.createElement("p");
     userCreatedAt.textContent = "Account created at: " + new Date(userData.createdAt).toLocaleString();
 
-   // Calculate audits ratio
-   let auditsData = calculateAuditsRatio(userData.transactions);
+    // Calculate audits ratio
+    let auditsData = calculateAuditsRatio(userData.transactions);
 
-   // Create a paragraph element for audits ratio
-   let auditsRatioPara = document.createElement("p");
-   auditsRatioPara.textContent = "Audits Ratio: " + auditsData.auditsRatio.toFixed(2);
+    // Create a paragraph element for audits ratio
+    let auditsRatioPara = document.createElement("p");
+    auditsRatioPara.textContent = "Audits Ratio: " + auditsData.auditsRatio.toFixed(2);
 
-   // Calculate XP progression
-   let xpProgression = calculateXPProgression(userData.transactions);
+    // Calculate XP progression
+    let xpProgression = calculateXPProgression(userData.transactions);
 
-   // Create a paragraph element for xp progression
-   let xpProgressionElement = document.createElement("p");
-   xpProgressionElement.textContent = "XP Progression: " + xpProgression/1000 + "kB";
+    // Create a paragraph element for xp progression
+    let xpProgressionElement = document.createElement("p");
+    xpProgressionElement.textContent = "XP Progression: " + xpProgression / 1000 + "kB";
 
     // Append user information elements to the container
     userInfoContainer.appendChild(header);
     userInfoContainer.appendChild(userId);
     userInfoContainer.appendChild(userLogin);
     userInfoContainer.appendChild(userCreatedAt);
-    userInfoContainer.appendChild(auditsRatioPara); 
+    userInfoContainer.appendChild(auditsRatioPara);
     userInfoContainer.appendChild(xpProgressionElement);
-    
+
     // Append the container to the app div
     app.appendChild(userInfoContainer);
 
@@ -221,7 +221,7 @@ function renderUserInfo(userData) {
 
 // Function to calculate the audits ratio
 function calculateAuditsRatio(transactions) {
-    
+
     let upAmount = 0;
     let downAmount = 0;
 
@@ -267,7 +267,7 @@ function renderPieChart(upAmount, downAmount) {
     // Create the SVG element
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "200");
-    svg.setAttribute("height", "240"); 
+    svg.setAttribute("height", "240");
     svg.style.display = "block";
 
     // Set the radius and center of the pie chart
@@ -314,7 +314,7 @@ function renderPieChart(upAmount, downAmount) {
 
     svg.appendChild(PercentageText);
     svg.appendChild(nameText)
-    
+
 }
 
 // Function to create a pie slice path
@@ -351,7 +351,7 @@ function createSlice(path, color) {
 
 // Function to render the XP progression graph using D3.js
 function renderXPProgressionGraph(transactions) {
-    
+
     // Filter transactions for XP progression from performed tasks
     const xpTransactions = transactions.filter(transaction => transaction.type === "xp" && !transaction.path.includes('piscine') && transaction.createdAt);
 
@@ -419,8 +419,8 @@ function renderXPProgressionGraph(transactions) {
     // Append a title to the graph
     svg.append("text")
         .attr("x", (width + margin.left + margin.right) / 2)
-        .attr("y", height/15)
+        .attr("y", height / 15)
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
-        .text("XP Progression");    
+        .text("XP Progression");
 }
