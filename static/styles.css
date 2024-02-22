@@ -1,0 +1,47 @@
+body {
+    background-color: hsl(229, 33%, 74%);
+    font-family: 'Times New Roman', Times, serif;
+    margin-left: 30px;
+}
+
+.logoutButton, .button {
+    position: absolute;
+    font-size: 1rem;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(0, 0, 0); 
+    border-radius: 5px;
+    padding: 5px 15px; 
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent; 
+    margin-top: 10px;
+}
+
+.input {
+    width: 200px; 
+    height: 30px;
+    font-size: 1rem;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    padding: 5px 10px; 
+    margin-bottom: 10px; 
+    background-color: #fff;
+}
+
+.error {
+    position: absolute;
+    top: 250px;
+    font-size: 1rem;
+    color: red;
+}
+
+
+.app {
+    display: flex;
+}
+
+.app > svg {
+   margin-left: 50px;
+}
