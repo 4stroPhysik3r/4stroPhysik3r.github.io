@@ -122,6 +122,7 @@ button {
     display: block;
     align-items: center;
     margin: auto;
+    border-radius: 1rem;
 }
 
 footer {
