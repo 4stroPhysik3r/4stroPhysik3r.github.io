@@ -1,106 +1,103 @@
-var usernameEmail = ""
-var password = ""
-var app = document.getElementById("app")
-var logOutDiv = document.getElementById("logOutDiv")
-
-init()
+const colors = ['Orange', 'Gold']
+let app = document.getElementById("app")
+let loginDiv = document.getElementById("loginDiv")
+let logoutDiv = document.getElementById("logoutDiv")
+let graphDiv = document.getElementById("graphDiv")
 
 function init() {
-
-    let body = document.getElementById("app")
     if (localStorage.loggedIn != "true") {
         login()
+        logoutDiv.style.display = "none"
     } else {
         home()
+        loginDiv.style.display = "none"
     }
 }
 
 function login() {
+    app.style.display = "none";
+    loginDiv.className = "loginDiv";
 
-    app.style.display = "none"
-    let loginDiv = document.getElementById("loginDiv")
-    loginDiv.className = "login"
+    let loginForm = document.createElement("form");
 
-    let loginForm = document.createElement("form")
-    let lineBreak = document.createElement("br")
-    //can't append same linebreak 2 times somewhy to the form, so creating 2 different ones : D
-    let lineBreak2 = document.createElement("br")
+    let loginName = document.createElement("input");
+    loginName.type = "text";
+    loginName.name = "username";
+    loginName.className = "input";
+    loginName.placeholder = "Username or email";
+    loginName.id = "username";
+    loginName.required = true;
 
-    let loginName = document.createElement("input")
-    loginName.type = "text"
-    loginName.name = "username"
-    loginName.className = "input"
-    loginName.placeholder = "Username or email"
-    loginName.id = "username"
-    loginName.required = true
-
-    let loginPassword = document.createElement("input")
-    loginPassword.type = "password"
-    loginPassword.name = "password"
-    loginPassword.className = "input"
-    loginPassword.placeholder = "Password"
-    loginPassword.id = "password"
-    loginPassword.required = true
+    let loginPassword = document.createElement("input");
+    loginPassword.type = "password";
+    loginPassword.name = "password";
+    loginPassword.className = "input";
+    loginPassword.placeholder = "Password";
+    loginPassword.id = "password";
+    loginPassword.required = true;
 
     loginPassword.addEventListener("keyup", (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault()
-            authorize()
+            e.preventDefault();
+            authorize();
         }
-    })
+    });
 
-    let button = document.createElement("button")
-    button.type = "submit"
-    button.className = "button"
-    button.innerHTML = "Login"
+    let button = document.createElement("button");
+    button.type = "submit";
+    button.className = "button";
+    button.innerHTML = "Login";
 
-    let error = document.createElement("h2")
-    error.style.display = "none"
-    error.id = "error"
-    error.className = "error"
+    let error = document.createElement("h2");
+    error.style.display = "none";
+    error.id = "error";
+    error.className = "error";
 
-    // append all the shit to the loginForm -> to the loginDiv
-    loginForm.appendChild(loginName)
-    loginForm.appendChild(lineBreak)
-    loginForm.appendChild(loginPassword)
-    loginForm.appendChild(lineBreak2)
-    loginForm.appendChild(button)
-    loginForm.appendChild(error)
-    loginDiv.appendChild(loginForm)
+    // Apply CSS margin for spacing between elements
+    loginName.style.marginBottom = "10px";
+    loginPassword.style.marginBottom = "10px";
+
+    // Appending elements to the form
+    loginForm.appendChild(loginName);
+    loginForm.appendChild(loginPassword);
+    loginForm.appendChild(button);
+    loginForm.appendChild(error);
+
+    // Appending form to loginDiv
+    loginDiv.appendChild(loginForm);
+
+    // Adding submit event listener
     loginForm.addEventListener("submit", (e) => {
-        e.preventDefault()
-        authorize()
-    })
+        e.preventDefault();
+        authorize();
+    });
 }
 
-async function authorize() {
 
+async function authorize() {
     let error = document.getElementById("error")
     error.style.display = "none"
-    usernameEmail = document.getElementById("username").value
-    password = document.getElementById("password").value
+    var usernameEmail = document.getElementById("username").value
+    var password = document.getElementById("password").value
 
-    // btoa(): This function is used to encode a string in base64. It takes a string as input and returns a base64-encoded ASCII string.
-    //In this case, usernameEmail and password variables are concatenated together with a colon (:) between them.
-    let data = btoa(usernameEmail + ':' + password);
+
+    let data = btoa(usernameEmail + ':' + password) // encodes to base64-encoded ASCII string.
     let response = await fetch("https://01.kood.tech/api/auth/signin", {
         method: 'POST',
         headers: {
             'Authorization': `Basic ${data}`
         }
     })
+
     let token = await response.json()
 
-    // error codes: 
-    // 401 - request lacks valid authentication credentials for the target resource.
-    // 403 - server understood the request but refuses to authorize it, due to permissions or security reasons. (WRONG username/pass)
-    if (response.status == "401" || response.status == "403") {
+    if (response.status == "401" || response.status == "403") { // error codes: 401 Unauthorized,403 Forbidden
         error.style.display = ""
-        error.innerHTML = "Username / password incorrect, please try again"
+        error.innerHTML = "Username or password incorrect, please try again"
         return
     }
 
-    // Storing the information about token in the local storage and setting the loggedIn flag true
+    // Storing token information in local storage and setting loggedIn flag true
     localStorage.setItem('JWToken', token)
     localStorage.setItem('loggedIn', true)
     document.getElementById("loginDiv").style.display = "none"
@@ -108,32 +105,20 @@ async function authorize() {
     home()
 }
 
-
-function logout() {
-
-    localStorage.clear()
-    window.location.replace("/")
-}
-
 async function home() {
-
-    logOutDiv.style.display = "";
-    app.style.display = "";
-    app.innerHTML = "";
+    logoutDiv.style.display = ""
+    app.style.display = ""
+    app.innerHTML = ""
 
     // Fetch user data
-    let userData = await fetchUserData();
-    console.log(userData)
+    let userData = await fetchUserData()
+    if (!userData) return   // Check if user data exists
 
-    // Check if user data exists
-    if (userData) {
-        renderUserInfo(userData.data.user[0]);
-    }
+    renderUserInfo(userData.data.user[0])
 }
 
-// Function to fetch user data
 async function fetchUserData() {
-    let token = localStorage.getItem('JWToken');
+    let token = localStorage.getItem('JWToken')
     try {
         let response = await fetch('https://01.kood.tech/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -158,269 +143,273 @@ async function fetchUserData() {
                     }
                 }`
             })
-        });
-        let data = await response.json();
-        return data;
+        })
+
+        let data = await response.json()
+        return data
     } catch (error) {
-        console.log(error);
-        return null; // Return null if error occurs
+        console.log(error)
+        return null
     }
 }
 
 function renderUserInfo(userData) {
+    let userInfoDiv = document.createElement("div")
+    userInfoDiv.className = "userInfoDiv"
 
-    // Create elements to display user information
-    let userInfoContainer = document.createElement("div");
-    userInfoContainer.className = "userInfoContainer";
+    let header = document.createElement("h2")
+    header.className = "header"
+    header.innerHTML = "Profile information:"
 
-    let header = document.createElement("p");
-    header.textContent = "My profile information:";
-    header.style.fontWeight = "bold";
-    header.style.fontSize = "1.3em";
+    let userId = document.createElement("p")
+    userId.innerHTML = "User ID:<br>" + userData.id
 
-    let userId = document.createElement("p");
-    userId.textContent = "User ID: " + userData.id;
+    let userLogin = document.createElement("p")
+    userLogin.innerHTML = "Username:<br>" + userData.login
 
-    let userLogin = document.createElement("p");
-    userLogin.textContent = "Username: " + userData.login;
+    let userCreatedAt = document.createElement("p")
+    userCreatedAt.innerHTML = "Account-Creation:<br>" + new Date(userData.createdAt).toLocaleString()
 
-    let userCreatedAt = document.createElement("p");
-    userCreatedAt.textContent = "Account created at: " + new Date(userData.createdAt).toLocaleString();
+    let auditsData = calculateAuditsRatio(userData.transactions)
+    let xpProgression = calculateXPProgression(userData.transactions)
 
-    // Calculate audits ratio
-    let auditsData = calculateAuditsRatio(userData.transactions);
+    let xpProgressionElement = document.createElement("p")
+    xpProgressionElement.innerHTML = "XP Progression:<br>" + xpProgression / 1000 + " kB"
 
-    // Create a paragraph element for audits ratio
-    let auditsRatioPara = document.createElement("p");
-    auditsRatioPara.textContent = "Audits Ratio: " + auditsData.auditsRatio.toFixed(2);
+    userInfoDiv.appendChild(header)
+    userInfoDiv.appendChild(userId)
+    userInfoDiv.appendChild(userLogin)
+    userInfoDiv.appendChild(userCreatedAt)
+    userInfoDiv.appendChild(xpProgressionElement)
 
-    // Calculate XP progression
-    let xpProgression = calculateXPProgression(userData.transactions);
+    app.appendChild(userInfoDiv)
 
-    // Create a paragraph element for xp progression
-    let xpProgressionElement = document.createElement("p");
-    xpProgressionElement.textContent = "XP Progression: " + xpProgression / 1000 + "kB";
-
-    // Append user information elements to the container
-    userInfoContainer.appendChild(header);
-    userInfoContainer.appendChild(userId);
-    userInfoContainer.appendChild(userLogin);
-    userInfoContainer.appendChild(userCreatedAt);
-    userInfoContainer.appendChild(auditsRatioPara);
-    userInfoContainer.appendChild(xpProgressionElement);
-
-    // Append the container to the app div
-    app.appendChild(userInfoContainer);
-
-    // Append the pie chart to the app div
-    renderPieChart(auditsData.auditsDone, auditsData.auditsReceived);
-
-    // Render XP progression graph
-    renderXPProgressionGraph(userData.transactions);
+    // Render graphs
+    renderPieChart(auditsData.auditsDone, auditsData.auditsReceived)
+    renderXPProgressionGraph(userData.transactions)
 }
 
-// Function to calculate the audits ratio
+// calculate the audits ratio
 function calculateAuditsRatio(transactions) {
-
-    let upAmount = 0;
-    let downAmount = 0;
+    let upAmount = 0
+    let downAmount = 0
 
     transactions.forEach(transaction => {
         if (transaction.type === "up") {
-            upAmount += transaction.amount;
+            upAmount += transaction.amount
         } else if (transaction.type === "down") {
-            downAmount += transaction.amount;
+            downAmount += transaction.amount
         }
-    });
+    })
 
-    let auditsRatio = (upAmount / downAmount);
+    let auditsRatio = (upAmount / downAmount)
 
     return {
         auditsRatio: auditsRatio,
         auditsDone: upAmount,
         auditsReceived: downAmount
-    };
+    }
 }
 
-// Function to calculate the total XP progression gained from performed tasks
+// calculate the total XP progression gained from performed tasks
 function calculateXPProgression(transactions) {
-    let totalXP = 0;
+    let totalXP = 0
 
     transactions.forEach(transaction => {
         // Check if the transaction is for XP progression from performed tasks, taking out all the xp gained from piscines
         if (transaction.type === "xp" && !transaction.path.includes('piscine')) {
-            totalXP += transaction.amount;
+            totalXP += transaction.amount
         }
-    });
+    })
 
     return totalXP
 }
 
-// Function to render the pie chart
+// render the pie chart
 function renderPieChart(upAmount, downAmount) {
+    let graphDiv = document.createElement("div")
+    graphDiv.id = "graphDiv"
+    graphDiv.className = "graphDiv"
+    app.appendChild(graphDiv)
 
-    const colors = ['#2ca02c', '#98df8a'];
-    const totalAudits = upAmount + downAmount;
-    const percentAuditsDone = (upAmount / totalAudits) * 100;
-    const percentAuditsReceived = (downAmount / totalAudits) * 100;
+    const totalAudits = upAmount + downAmount
+    const percentAuditsDone = (upAmount / totalAudits) * 100
+    const percentAuditsReceived = (downAmount / totalAudits) * 100
 
-    // Create the SVG element
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "200");
-    svg.setAttribute("height", "240");
-    svg.style.display = "block";
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svg.id = "PieChart"
+    svg.setAttribute("width", "200")
+    svg.setAttribute("height", "300")
 
     // Set the radius and center of the pie chart
-    const radius = 80;
-    const centerX = 100;
-    const centerY = 100;
+    const radius = 80
+    const centerX = 100
+    const centerY = 100
 
-    // Initialize variables for drawing the pie slices
-    let startAngle = 0;
-    let endAngle = 0;
+    let startAngle = 0
+    let endAngle = 0
 
-    // Draw the "audits done" slice
-    endAngle = (percentAuditsDone / 100) * 360;
-    const path1 = describeArc(centerX, centerY, radius, startAngle, endAngle);
-    const slice1 = createSlice(path1, colors[0]);
-    svg.appendChild(slice1);
-    startAngle = endAngle;
+    // Draw the done audits slice
+    endAngle = (percentAuditsDone / 100) * 360
+    const path1 = describeArc(centerX, centerY, radius, startAngle, endAngle)
+    const slice1 = document.createElementNS("http://www.w3.org/2000/svg", "path")
+    slice1.setAttribute("d", path1)
+    slice1.setAttribute("fill", colors[0])
+    svg.appendChild(slice1)
+    startAngle = endAngle
 
-    // Draw the "audits received" slice
-    endAngle = 360;
-    const path2 = describeArc(centerX, centerY, radius, startAngle, endAngle);
-    const slice2 = createSlice(path2, colors[1]);
-    svg.appendChild(slice2);
-
-    // Append the pie chart container to the app div
-    app.appendChild(svg);
+    // Draw the received audits slice
+    endAngle = 360
+    const path2 = describeArc(centerX, centerY, radius, startAngle, endAngle)
+    const slice2 = document.createElementNS("http://www.w3.org/2000/svg", "path")
+    slice2.setAttribute("d", path2)
+    slice2.setAttribute("fill", colors[1])
+    svg.appendChild(slice1)
+    svg.appendChild(slice2)
 
     // Calculate percentages as strings
-    const donePercentageString = percentAuditsDone.toFixed(2) + "%";
-    const receivedPercentageString = percentAuditsReceived.toFixed(2) + "%";
+    const donePercentageString = percentAuditsDone.toFixed(2) + " %"
+    const receivedPercentageString = percentAuditsReceived.toFixed(2) + " %"
+    let auditRatio = Math.round((upAmount / downAmount) * 10) / 10
 
     // Create text elements for displaying percentages
-    const PercentageText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    PercentageText.setAttribute("x", centerX);
-    PercentageText.setAttribute("y", centerY + radius + 20);
-    PercentageText.setAttribute("text-anchor", "middle");
-    PercentageText.textContent = receivedPercentageString + " / " + donePercentageString;
+    const percentageText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+    percentageText.setAttribute("x", centerX)
+    percentageText.setAttribute("y", centerY + radius + 30)
+    percentageText.setAttribute("text-anchor", "middle")
+    percentageText.innerHTML = receivedPercentageString + " / " + donePercentageString
 
-    const nameText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    nameText.setAttribute("x", centerX);
-    nameText.setAttribute("y", centerY + radius + 40);
-    nameText.setAttribute("text-anchor", "middle");
-    nameText.textContent = "audits received / done"
+    const nameText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+    nameText.setAttribute("x", centerX)
+    nameText.setAttribute("y", centerY + radius + 50)
+    nameText.setAttribute("text-anchor", "middle")
+    nameText.innerHTML = "received / done";
 
-    svg.appendChild(PercentageText);
+    const auditRatioText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    auditRatioText.setAttribute("x", centerX);
+    auditRatioText.setAttribute("y", centerY + radius + 80);
+    auditRatioText.setAttribute("text-anchor", "middle");
+    auditRatioText.innerHTML = auditRatio + " Audit Ratio";
+
+    const auditRatioStatement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    auditRatioStatement.setAttribute("x", centerX);
+    auditRatioStatement.setAttribute("y", centerY + radius + 100);
+    auditRatioStatement.setAttribute("text-anchor", "middle");
+    auditRatioStatement.innerHTML = (auditRatio >= 1.2) ? "Almost perfect!" : "Good enough.";
+
+    svg.appendChild(percentageText)
     svg.appendChild(nameText)
+    svg.appendChild(auditRatioText);
+    svg.appendChild(auditRatioStatement);
 
+    // Append the pie chart container to the app div
+    graphDiv.appendChild(svg)
 }
 
-// Function to create a pie slice path
+// create a pie slice path
 function describeArc(x, y, radius, startAngle, endAngle) {
-    const startRadians = (startAngle - 90) * Math.PI / 180;
-    const endRadians = (endAngle - 90) * Math.PI / 180;
+    const startRadians = (startAngle - 90) * Math.PI / 180
+    const endRadians = (endAngle - 90) * Math.PI / 180
 
-    const startX = x + radius * Math.cos(startRadians);
-    const startY = y + radius * Math.sin(startRadians);
+    const startX = x + radius * Math.cos(startRadians)
+    const startY = y + radius * Math.sin(startRadians)
+    const endX = x + radius * Math.cos(endRadians)
+    const endY = y + radius * Math.sin(endRadians)
 
-    const endX = x + radius * Math.cos(endRadians);
-    const endY = y + radius * Math.sin(endRadians);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1"
 
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-
-    const d = [
+    const arc = [
         "M", x, y,
         "L", startX, startY,
         "A", radius, radius, 0, largeArcFlag, 1, endX, endY,
         "Z"
-    ].join(" ");
+    ].join(" ")
 
-    return d;
+    return arc
 }
 
-// Function to create a pie slice
-function createSlice(path, color) {
-    const slice = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    slice.setAttribute("d", path);
-    slice.setAttribute("fill", color);
-    return slice;
-}
-
-
-// Function to render the XP progression graph using D3.js
+// render the XP progression graph using D3.js
 function renderXPProgressionGraph(transactions) {
+    const xpTransactions = transactions.filter(transaction => transaction.type === "xp" && !transaction.path.includes('piscine') && transaction.createdAt)
 
-    // Filter transactions for XP progression from performed tasks
-    const xpTransactions = transactions.filter(transaction => transaction.type === "xp" && !transaction.path.includes('piscine') && transaction.createdAt);
-
-    // Sort XP transactions by createdAt timestamp
-    xpTransactions.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    xpTransactions.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
     // Extract timestamps and XP amounts from filtered transactions
-    const timestamps = xpTransactions.map(transaction => new Date(transaction.createdAt));
-    const xpAmounts = xpTransactions.map(transaction => transaction.amount);
+    const timestamps = xpTransactions.map(transaction => new Date(transaction.createdAt))
+    const xpAmounts = xpTransactions.map(transaction => transaction.amount)
 
     // Calculate cumulative XP amounts over performed tasks
     const cumulativeXP = xpAmounts.reduce((acc, xp) => {
-        acc.push((acc.length > 0 ? acc[acc.length - 1] : 0) + xp);
-        return acc;
-    }, []);
+        acc.push((acc.length > 0 ? acc[acc.length - 1] : 0) + xp)
+        return acc
+    }, [])
 
     // Define margins and dimensions for the graph
-    const margin = { top: 20, right: 30, bottom: 30, left: 60 };
-    const fullWidth = Math.min(0.5 * window.innerWidth, 800); // 60% of window width, capped at 800px
-    const width = fullWidth - margin.left - margin.right;
-    const height = Math.round((2 / 3) * width); // Maintain 2:3 aspect ratio
+    const margin = { top: 20, right: 30, bottom: 30, left: 60 }
+    const fullWidth = Math.min(0.5 * window.innerWidth, 800) // 60% of window width, capped at 800px
+    const width = fullWidth - margin.left - margin.right
+    const height = Math.round((2 / 3) * width) // Maintain 2:3 aspect ratio
 
     // Create SVG element using D3.js
-    const svg = d3.select("#app")
+    const svg = d3.select("#graphDiv")
         .append("svg")
+        .attr("id", "XP-Progression")
         .attr("width", fullWidth)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("height", height + margin.top + margin.bottom)
 
-    // Create X axis scale using D3.js
+    // Create axes scale using D3.js
     const xScale = d3.scaleTime()
-        .domain([timestamps[0], d3.max(timestamps)])  // Adjusted to start from the first timestamp
-        .range([0, width]);
+        .domain([timestamps[0], d3.max(timestamps)])    // Adjusted to start from the first timestamp
+        .range([0, width])
 
-    // Create Y axis scale using D3.js
     const yScale = d3.scaleLinear()
         .domain([0, d3.max(cumulativeXP)])  // Adjusted to include 0
-        .range([height, 0]);
+        .range([height, 0])
 
-    // Create X axis using D3.js
-    const xAxis = d3.axisBottom(xScale);
-    svg.append("g")
+    // X-Axis text
+    const xAxis = d3.axisBottom(xScale)
+    const xAxisGroup = svg.append("g")
         .attr("transform", `translate(${margin.left}, ${height + margin.top})`)
-        .call(xAxis);
+        .call(xAxis)
 
-    // Create Y axis using D3.js
-    const yAxis = d3.axisLeft(yScale);
+    xAxisGroup.selectAll("text")
+        .attr("transform", "rotate(-20)") // Rotate the text by -30 degrees
+        .attr("y", 10)
+        .attr("x", -10)
+        .style("text-anchor", "middle"); // Adjust text anchor for better alignment
+
+    // Y-Axis text
+    const yAxis = d3.axisLeft(yScale)
     svg.append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
-        .call(yAxis);
+        .call(yAxis)
 
     // Create line generator using D3.js
     const line = d3.line()
         .x((d, i) => xScale(timestamps[i]))
-        .y((d, i) => yScale(cumulativeXP[i]));
+        .y((d, i) => yScale(cumulativeXP[i]))
 
     // Draw line graph using D3.js
     svg.append("path")
         .datum(timestamps)
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+        .attr("stroke", colors[0])
         .attr("stroke-width", 4)
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
-        .attr("d", line);
+        .attr("d", line)
 
     // Append a title to the graph
     svg.append("text")
         .attr("x", (width + margin.left + margin.right) / 2)
         .attr("y", height / 15)
         .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .text("XP Progression");
+        .style("font-size", "1.25rem")
+        .text("XP Progression")
 }
+
+function logout() {
+    localStorage.clear()
+    window.location.replace("/")
+}
+
+init()
