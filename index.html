@@ -2,23 +2,209 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GraphQL</title>
-    <link href="/static/styles.css" rel="stylesheet">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="/static/script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/img/fav_4stro-Design.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oxygen&family=Oxygen+Mono&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="script.js" defer></script>
+  <title>Alexander Embacher Portfolio</title>
 </head>
 
 <body>
-    <h1 class="loginHeader">My GraphQL</h1>
+  <div class="cursor"></div>
+  <nav class="green">
+    <ul>
+      <li>
+        <h1>
+          <a href="./index"><span class="fas fa-code" aria-hidden="true"></span> Alexander
+            Embacher</a>
+        </h1>
+      </li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="./about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li>
+        <a href="https://www.linkedin.com/in/alexander-embacher" target="_blank">
+          <span class="fab fa-linkedin" aria-hidden="true"></span>
+          <span class="sr-only">LinkedIn</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.github.com/4stroPhysik3r" target="_blank">
+          <span class="fab fa-github-square" aria-hidden="true"></span>
+          <span class="sr-only">Github</span>
+        </a>
+      </li>
+      <li>
+        <a href="Portfolio2023_AlexanderEmbacher.pdf" target="_blank" class="button">Portfolio</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="gradient"></div>
 
-    <div id="app" class="app"></div>
-    <div id="loginDiv" class="loginDiv"></div>
-    <div id="logoutDiv" class="logoutDiv">
-        <button id="logoutButton" type="button" onclick="logout()" class="logoutButton">Logout</button>
+  <section id="intro">
+    <p class="name">Hi, my name is <span>Alexander Embacher.</span></p>
+    <h2>I shape the future.</h2>
+    <p>
+      I'm a Graphic Designer with experience in branding, illustration and
+      animation.
+    </p>
+    <p>
+      Currently, I'm studying software development at
+      <a href="https://kood.tech" target="_blank">kood/Jõhvi</a>.
+    </p>
+  </section>
+
+  <div class="reverse-gradient"></div>
+  <main>
+    <div class="section-dkgreen">
+      <section id="projects">
+        <h2>Projects I'm proud of</h2>
+        <article>
+          <div class="text">
+            <h4>Latest Project</h4>
+            <h3>Ave Massage- & Phytotherapy</h3>
+            <p class="blackbox">
+              Corporate Identity & Branding Strategy for a local massage
+              studio. The primary focus of the brand was on promoting
+              relaxation and utilizing natural products. As part of this
+              endeavor, we created a new logo that aligned perfectly with the
+              brand's theme. Additionally, we designed clothing and print
+              products to complement the brand's identity. To establish a
+              strong online presence, we leveraged the cloud-based CMS and web
+              publishing system known as Webflow to ensure a smooth and
+              efficient digital representation of the brand. See the website
+              <a href="https://futoteraapia.webflow.io" target="_blank">here.</a>
+            </p>
+            <h4>Technologies used include:</h4>
+            <ul>
+              <li>Photoshop/Illustrator</li>
+              <li>Branding</li>
+              <li>Webflow</li>
+            </ul>
+          </div>
+          <img src="/img/AveMassage/Ave_VK_MockUp.png" alt="MockUp of business card." loading="lazy" />
+        </article>
+
+        <article class="reverse">
+          <div class="text">
+            <h4>Social Media Project</h4>
+            <h3>GKRAFT Social Media Campaign</h3>
+            <p class="blackbox">
+              The project consists of three different animations, each of them
+              showing a different theme for a different use cases. The
+              campaign is focused to maximizing sales for the machines. The
+              animations and social media postings started as a part of a new
+              social media campaign. Read more about the company
+              <a href="https://www.gkraft.at" target="_blank">here</a>.
+            </p>
+            <h4>Technologies used include:</h4>
+            <ul>
+              <li>Photoshop</li>
+              <li>AfterEffects</li>
+              <li>Social Media</li>
+            </ul>
+          </div>
+          <img src="img/GKRAFT/prev_GKRAFT_Keyvisual_Hof_Animation.jpg" alt="G-Kraft hay harvest  social media campaign"
+            loading="lazy" />
+        </article>
+
+        <article>
+          <div class="text">
+            <h4>Branding Project</h4>
+            <h3>FensterProfi Branding</h3>
+            <p class="blackbox">
+              This project showcases a dynamic and innovative branding
+              strategy for the renowned window solutions company,
+              FensterProfi. The revamped brand elements, including a
+              captivating logo and vibrant color palette, reflect the
+              company's commitment to excellence and reliability. The project
+              encapsulates the essence of the company's products and services
+              and strengthening the company's position as a market leader. See
+              the website
+              <a href="https://fensterprofi.eu" target="_blank">here</a>.
+            </p>
+            <h4>Technologies used include:</h4>
+            <ul>
+              <li>Photoshop/Illustrator</li>
+              <li>Branding</li>
+              <li>Powerpoint</li>
+            </ul>
+          </div>
+          <img src="img/FensterProfi/Fensterprofi_Mockup.png" alt="Collection of office supplies for FensterProfi."
+            loading="lazy" />
+        </article>
+      </section>
     </div>
-    <footer><a href="https://github.com/4stroPhysik3r">©4stroPhysik3r</a></footer>
+  </main>
+
+  <div class="gradient"></div>
+  <div class="section-emerald">
+    <div id="contact-border">
+      <section id="contact">
+        <h2>Contact me</h2>
+        <p>
+          As a graphic designer, I'm constantly eager to explore fresh
+          creative projects, tackle innovative design challenges, or
+          collaborate on exciting branding initiatives. Feel free to contact
+          me and discuss your next project!
+        </p>
+        <p>
+          <a href="mailto:alex.embi@gmail.com?subject=Make%20it%20happen!" class="contact-button" target="_blank">Get in
+            Touch!</a>
+        </p>
+      </section>
+    </div>
+  </div>
+  <div class="reverse-gradient"></div>
+
+  <button id="scrollUp" title="Scroll to Top"><i class="gg-push-chevron-up-r">
+      <link href='https://unpkg.com/css.gg@2.0.0/icons/css/push-chevron-up-r.css' rel='stylesheet'>
+    </i></button>
 </body>
+
+<footer>
+  <h2>Alexander Embacher &ndash; Graphic Designer</h2>
+  <ul>
+    <li>
+      <a href="https://www.linkedin.com/in/alexander-embacher" target="_blank">
+        <span class="fab fa-linkedin" aria-hidden="true"></span>
+        <span class="sr-only">LinkedIn</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.github.com/4stroPhysik3r" target="_blank">
+        <span class="fab fa-github-square" aria-hidden="true"></span>
+        <span class="sr-only">Github</span>
+      </a>
+    </li>
+    <li>
+      <a href="mailto:alex.embi@gmail.com?subject=Make%20it%20happen!" target="_blank">
+        <span class="fas fa-envelope" aria-hidden="true"></span>
+        <span class="sr-only">Email</span>
+      </a>
+    </li>
+  </ul>
+  <p>
+    <small>&copy; <span id="year"></span> Alexander Embacher. All rights reserved.
+    </small>
+  </p>
+
+  <div class="container">
+    <div id="ofgcert">
+      <script type="text/javascript"
+        src="https://ofg-studium.de/images/certificate/utils/cert.php?x=ea3cba74-f3f7-11ea-84eb-005056a71e55"></script>
+    </div>
+  </div>
+
+</footer>
+<div class="gradient"></div>
+<div class="gradient"></div>
+<div class="gradient"></div>
 
 </html>
